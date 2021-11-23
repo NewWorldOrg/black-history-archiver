@@ -1,10 +1,12 @@
 #-*- coding:utf-8 -*-
 SQL_UP = u"""
-CREATE TABLE my_fave_tweets_sample (
+CREATE TABLE black_histories (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
   `account_name` varchar(255) COLLATE utf8mb4_bin NOT NULL COMMENT 'アカウント名',
   `tweet_id` varchar(255) COLLATE utf8mb4_bin NOT NULL COMMENT 'ツイートID',
   `tweet_url` varchar(255) COLLATE utf8mb4_bin NOT NULL COMMENT 'ツイートURL',
+  `tweet_content` TEXT COLLATE utf8mb4_bin NOT NULL COMMENT 'ツイート本文',
+  `tweet_source` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'クライアント名',
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '作成日時',
   `updated_at` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
   PRIMARY KEY  (id),
@@ -13,5 +15,5 @@ CREATE TABLE my_fave_tweets_sample (
 """
 
 SQL_DOWN = u"""
-DROP TABLE my_fave_tweets_sample
+DROP TABLE black_histories
 """
