@@ -24,7 +24,7 @@ class GetFaveTweets:
         )
 
         # queryの設定をしてツイートを1件ずつ取得する
-        query = 'from:{user_name}'.format(user_name = user_name)
+        query = 'from:{user_name} -is:retweet'.format(user_name = user_name)
 
         for page in tw_client.search_all(query=query):
             for tweet in ensure_flattened(page):
@@ -45,7 +45,7 @@ class GetFaveTweets:
     def import_database(self) -> None:
         self.__get_fave_tweets(self.fave_name)
 
-        table = 'my_fave_tweets_sample'
+        table = 'black_histories'
         columns = [
             'account_name',
             'tweet_id',
