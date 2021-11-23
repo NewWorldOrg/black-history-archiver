@@ -50,6 +50,8 @@ class GetFaveTweets:
             'account_name',
             'tweet_id',
             'tweet_url',
+            'tweet_content',
+            'tweet_source',
         ]
         self.__data_processor()
         db_client = DbConnector()
