@@ -7,11 +7,14 @@ from dotenv import load_dotenv
 from twarc.client2 import Twarc2
 from twarc.expansions import ensure_flattened
 
+
 class GetFaveTweets:
 
     def __init__(self, fave_name):
         self.fave_name = fave_name
         self.tweet_url = 'https://twitter.com/{fave_name}/status/{tweet_id}'
+        self.tweet_contents = {}
+        self.tweet_source = {}
         self.result = {}
         self.import_data = []
 
@@ -24,13 +27,15 @@ class GetFaveTweets:
         )
 
         # queryの設定をしてツイートを1件ずつ取得する
-        query = 'from:{user_name} -is:retweet'.format(user_name = user_name)
+        query = 'from:{user_name} -is:retweet'.format(user_name=user_name)
 
         for page in tw_client.search_all(query=query):
             for tweet in ensure_flattened(page):
                 self.result[tweet.get('id')] = tweet.get('created_at')
+                self.tweet_contents[tweet.get('id')] = tweet.get('text')
+                self.tweet_source[tweet.get('id')] = tweet.get('source')
 
-        self.result = sorted(self.result.items(), key=lambda x:x[1])
+        self.result = sorted(self.result.items(), key=lambda x: x[1])
 
     def __data_processor(self):
         self.import_data = []
@@ -39,7 +44,9 @@ class GetFaveTweets:
             self.import_data.append([
                 self.fave_name,
                 k[0],
-                self.tweet_url.format(fave_name=self.fave_name, tweet_id=k[0])
+                self.tweet_url.format(fave_name=self.fave_name, tweet_id=k[0]),
+                self.tweet_contents[k[0]],
+                self.tweet_source[k[0]]
             ])
 
     def import_database(self) -> None:
@@ -64,8 +71,8 @@ class GetFaveTweets:
         csv_generator = CsvGenerator()
         csv_generator.gen_csv(self.import_data, self.fave_name)
 
-def main():
 
+def main():
     # dotenvの読み込み
     base_path = os.path.dirname(os.path.abspath(__file__))
     dotenv_path = os.path.join(base_path, '.env')
@@ -109,6 +116,7 @@ def main():
 
     logger.info('取得完了しました')
     print('高田憂希しか好きじゃない')
+
 
 if __name__ == '__main__':
     main()
