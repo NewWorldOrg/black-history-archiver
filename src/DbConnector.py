@@ -20,7 +20,7 @@ class DbConnector:
 
     def __get_value(self, values: list) -> str:
         return '({parameters})'.format(
-            parameters=', '.join(str('\'' + str(parameter) + '\'') for parameter in values)
+            parameters=', '.join(repr(parameter) for parameter in values)
         )
 
     def insert(self, table: str, values: dict) -> bool:
@@ -57,11 +57,16 @@ class DbConnector:
             values=', '.join(parameters)
         )
 
+        with open('test.sql', 'w') as f:
+            f.write(sql)
+        f.close()
+
         try:
             cur.execute(sql)
             cnx.commit()
             return True
-        except:
+        except Exception as e:
+            print(e)
             cnx.rollback()
             return False
 
