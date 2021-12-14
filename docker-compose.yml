@@ -16,6 +16,7 @@ services:
       - db-store:/var/lib/mysql
       - ./docker/db/init.sql:/docker-entrypoint-initdb.d/0.sql
     tty: true
+    platform: linux/x86_64
     environment:
       - MYSQL_DATABASE=${DB_DATABASE}
       - MYSQL_ROOT_PASSWORD=${DB_PASSWD}
